@@ -17,8 +17,8 @@ class RiffBot extends React.Component {
       this.triggerNote = this.triggerNote.bind(this);
 
       const initRythmWeights = {};
-      GuitarNotes.noteTypes.forEach(rythm => {
-        initRythmWeights[rythm] = 100 / GuitarNotes.noteTypes.length;
+      GuitarNotes.noteRythms.forEach(rythm => {
+        initRythmWeights[rythm] = 100 / GuitarNotes.noteRythms.length;
       });
   
       this.state = {
@@ -56,8 +56,12 @@ class RiffBot extends React.Component {
       return(
         <div>
           <NotePicker synth={this.state.synth} selectNote={this.selectNote} deselectNote={this.deselectNote}></NotePicker>
-          <WeightedSelect collection={GuitarNotes.noteTypes} defaultWeights={this.state.selectedRythmWeights} setWeight={this.setRythmWeight} classRef="rythmSlider"></WeightedSelect> 
-          <WeightedSelect collection={this.state.selectedNotes} defaultWeights={initNoteWeights} setWeight={this.setNoteWeight} classRef="noteSlider"></WeightedSelect>
+
+          <WeightedSelect collection={GuitarNotes.noteRythms} defaultWeights={this.state.selectedRythmWeights} 
+            setWeight={this.setRythmWeight} classRef="rythmSlider" symbolConverter={GuitarNotes.rythmCodeToSymbol}></WeightedSelect> 
+
+          <WeightedSelect collection={this.state.selectedNotes} defaultWeights={initNoteWeights} 
+            setWeight={this.setNoteWeight} classRef="noteSlider" symbolConverter={GuitarNotes.noteCodeToSymbol}></WeightedSelect>
 
           <label>
             <input type="checkbox" onChange={this.toggleChords.bind(this)}/>

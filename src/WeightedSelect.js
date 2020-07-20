@@ -1,5 +1,4 @@
 import React from 'react';
-import * as GuitarNotes from './notes';
 import WeightedSlider from './WeightedSlider'
 
 class WeightedSelect extends React.Component {
@@ -35,7 +34,8 @@ class WeightedSelect extends React.Component {
     }
 
     const sliders = this.props.collection.map((type, index) =>
-      <WeightedSlider key={type + ":" + index} note={type} defaultWeight={this.props.defaultWeights[type]} classRef={this.props.classRef} ref={this.selectionRefs[index]} updateWeights={this.updateWeights}></WeightedSlider>
+      <WeightedSlider key={type + ":" + index} note={type} defaultWeight={this.props.defaultWeights[type]} classRef={this.props.classRef} 
+      ref={this.selectionRefs[index]} updateWeights={this.updateWeights} symbolConverter={this.props.symbolConverter}></WeightedSlider>
     );       
       
     return(

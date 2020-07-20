@@ -40,7 +40,7 @@ class NotePicker extends React.Component {
   
       return(
         <div>
-          <table>
+          <table className="guitarNeck">
             <tbody>
               <tr className="guitarString"><th className="fret">1</th>{string1}</tr>
               <tr className="guitarString"><th className="fret">2</th>{string2}</tr>
@@ -48,7 +48,7 @@ class NotePicker extends React.Component {
               <tr className="guitarString"><th className="fret">4</th>{string4}</tr>
               <tr className="guitarString"><th className="fret">5</th>{string5}</tr>
               <tr className="guitarString"><th className="fret">6</th>{string6}</tr>
-              <tr className="guitarString"><th className="fret"></th>{fretNumbers}</tr>
+              <tr><th className="fret"></th>{fretNumbers}</tr>
             </tbody>
           </table>
         </div>
@@ -72,9 +72,9 @@ class NotePicker extends React.Component {
     render(){
       return(
         <td className="fret">
-          <label>
+          <label className="fret">
             <input type="checkbox" onChange={this.handleCheck.bind(this)}/>
-            <span>{this.state.note}</span>
+            <span>{GuitarNotes.noteCodeToSymbol(this.state.note)}</span>
           </label>
         </td>
       )

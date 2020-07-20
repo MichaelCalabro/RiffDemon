@@ -16,7 +16,7 @@ class WeightedSlider extends React.Component {
     return(
       <li>
         <label>
-          <span>{this.state.note}</span>
+          <span>{this.props.symbolConverter(this.state.note)}</span>
           <input type="checkbox" onChange={this.handleCheck.bind(this)}/>
           <input type="range" min="0" max="100" className={this.props.classRef} defaultValue={this.props.defaultWeight} step="0.01" onInput={this.handleSlide.bind(this)} ref={this.state.sliderRef}></input>         
         </label>
