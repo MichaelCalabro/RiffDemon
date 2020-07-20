@@ -1,7 +1,8 @@
 import * as Tone from 'tone';
 import React from 'react';
 import NotePicker from './NotePicker';
-import NoteTypePicker from './NoteTypePicker';
+import WeightedSelect from './WeightedSelect';
+import WeightedSlider from './WeightedSlider'
 import * as BarComposition from './BarComposition';
 import * as GuitarNotes from './notes';
 
@@ -9,8 +10,9 @@ class RiffBot extends React.Component {
     constructor(props){
       super(props);
   
-      this.selectNotePitch = this.selectNotePitch.bind(this);
-      this.deselectNotePitch = this.deselectNotePitch.bind(this);
+      this.selectNote = this.selectNote.bind(this);
+      this.deselectNote = this.deselectNote.bind(this);
+      this.setNoteWeight = this.setNoteWeight.bind(this);
       this.setRythmWeight = this.setRythmWeight.bind(this);
       this.triggerNote = this.triggerNote.bind(this);
 
@@ -35,7 +37,7 @@ class RiffBot extends React.Component {
         }).toDestination(),
 
         selectedNotes: [],
-        selectedNoteTypes: [],
+        selectedNoteWeights: {},
         selectedRythmWeights: initRythmWeights,
         chords: false
 
@@ -44,11 +46,18 @@ class RiffBot extends React.Component {
     }
   
     render(){
+
+      const initNoteWeights = {};
+      this.state.selectedNotes.forEach(note => {
+        initNoteWeights[note] = 0;
+      });
+  
   
       return(
         <div>
-          <NotePicker synth={this.state.synth} selectNote={this.selectNotePitch} deselectNote={this.deselectNotePitch}></NotePicker>
-          <NoteTypePicker defaultWeights={this.state.selectedRythmWeights} setRythmWeight={this.setRythmWeight} ></NoteTypePicker> 
+          <NotePicker synth={this.state.synth} selectNote={this.selectNote} deselectNote={this.deselectNote}></NotePicker>
+          <WeightedSelect collection={GuitarNotes.noteTypes} defaultWeights={this.state.selectedRythmWeights} setWeight={this.setRythmWeight} classRef="rythmSlider"></WeightedSelect> 
+          <WeightedSelect collection={this.state.selectedNotes} defaultWeights={initNoteWeights} setWeight={this.setNoteWeight} classRef="noteSlider"></WeightedSelect>
 
           <label>
             <input type="checkbox" onChange={this.toggleChords.bind(this)}/>
@@ -56,7 +65,7 @@ class RiffBot extends React.Component {
           </label>
   
           <button onClick={() => this.playSelectedNotes()}>PLAY</button>
-          <button onClick={() => this.deselectAllNotePitches()}>DESELECT ALL</button>
+          <button onClick={() => this.deselectAllNotes()}>DESELECT ALL</button>
           <button onClick={() => this.makeRiff()}>Make Riff</button>
           <button onClick={() => this.startRiff()}>Start Riff</button>
           <button onClick={() => this.stopRiff()}>Stop Riff</button>
@@ -64,25 +73,30 @@ class RiffBot extends React.Component {
       )
     }
   
-    selectNotePitch(note){
+    selectNote(note){
       this.setState({
         selectedNotes : this.state.selectedNotes.concat(note)
       });
     }
   
-    deselectNotePitch(note){
+    deselectNote(note){
       const newNotes = this.state.selectedNotes;
       const index = newNotes.indexOf(note);
       if(index > -1){
         newNotes.splice(index, 1);
       }
+
+      const newWeights = this.state.selectedNoteWeights;
+      delete newWeights[note];
   
       this.setState({
-        selectedNotes: newNotes
+        selectedNotes: newNotes,
+        selectedNoteWeights: newWeights
       });
+      
     }
   
-    deselectAllNotePitches(){
+    deselectAllNotes(){
       var cbs = document.querySelectorAll('td.fret input');
   
       for(var i = 0; i < cbs.length; i++){
@@ -92,10 +106,21 @@ class RiffBot extends React.Component {
       }
   
       this.setState({
-        selectedNotes: []
+        selectedNotes: [],
+        selectedNoteWeights: {}
       });
       
     }
+
+    setNoteWeight(note, weight){
+      this.setState(prevState => ({
+        selectedNoteWeights:{
+          ...prevState.selectedNoteWeights,
+          [note]: weight,
+        }
+      }));
+    }
+
 
     setRythmWeight(rythm, weight){
       this.setState(prevState => ({
@@ -112,7 +137,7 @@ class RiffBot extends React.Component {
       }else{
         this.setState({chords: false});
       }
-      console.log(this.state.selectedRythmWeights);
+      console.log(this.state.selectedNoteWeights);
     }
   
     playSelectedNotes(){
@@ -132,13 +157,20 @@ class RiffBot extends React.Component {
     }
 
     randomNote(){
-      return this.state.selectedNotes[Math.floor(Math.random() * this.state.selectedNotes.length)];
+      //return this.state.selectedNotes[Math.floor(Math.random() * this.state.selectedNotes.length)];
+      var noteWeights = {...this.state.selectedNoteWeights};
+
+      var chances = Object.keys(noteWeights).map(function(key){
+        return noteWeights[key];
+      });
+
+      return this.weightedRandom(Object.keys(noteWeights), chances);
     }
 
     randomNoteOrChord(){
 
       if(!this.state.chords){
-        return this.state.selectedNotes[Math.floor(Math.random() * this.state.selectedNotes.length)];
+        return this.randomNote();
       }
       else{
         var notesToPlay = [];
@@ -181,12 +213,17 @@ class RiffBot extends React.Component {
         return reweightedRythms[key];
       });
 
+      return this.weightedRandom(Object.keys(reweightedRythms), chances);
+
+    }
+
+    weightedRandom(arr, chances){
       var sum = chances.reduce((acc, el) => acc + el, 0);
       var acc = 0;
       chances = chances.map(el => (acc = el + acc));
       var rand = Math.random() * sum;
 
-      return Object.keys(reweightedRythms)[chances.filter(el => el <= rand).length];
+      return arr[chances.filter(el => el <= rand).length];
 
     }
 

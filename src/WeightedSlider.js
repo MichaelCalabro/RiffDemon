@@ -1,56 +1,6 @@
 import React from 'react';
-import * as GuitarNotes from './notes';
 
-class NoteTypePicker extends React.Component {
-
-    constructor(props){
-      super(props);
-  
-      this.updateRythmWeights = this.updateRythmWeights.bind(this);
-
-      this.selectionRefs = [];
-      for(var i = 0; i < GuitarNotes.noteTypes.length; i++){
-        this.selectionRefs.push(React.createRef());
-      }
-
-      this.state = {
-        
-      }
-    }
-  
-    render(){
-
-      //Init default slider values to total 100
-      // const defaultWeights = [];
-      // GuitarNotes.noteTypes.forEach(type => {
-      //   defaultWeights.push(100 / GuitarNotes.noteTypes.length);
-      // });
-      //defaultWeights[0] += 100 - (GuitarNotes.noteTypes.length * (Math.floor(100 / GuitarNotes.noteTypes.length)));
-
-
-      const noteTypes = GuitarNotes.noteTypes.map((type, index) =>
-        <NoteTypeSelect key={type} note={type} defaultWeight={this.props.defaultWeights[type]} ref={this.selectionRefs[index]} updateRythmWeights={this.updateRythmWeights}></NoteTypeSelect>
-      );       
-        
-      return(
-        <div>
-            <ul>
-              {noteTypes}
-            </ul>
-        </div>
-      )
-    }
-
-    updateRythmWeights(){
-
-      this.selectionRefs.forEach(selectRef => {
-        this.props.setRythmWeight(selectRef.current.state.note, parseFloat(selectRef.current.state.sliderRef.current.value));
-      });
-    }
-  
-  }
-  
-class NoteTypeSelect extends React.Component {
+class WeightedSlider extends React.Component {
 
   constructor(props){
     super(props);
@@ -68,7 +18,7 @@ class NoteTypeSelect extends React.Component {
         <label>
           <span>{this.state.note}</span>
           <input type="checkbox" onChange={this.handleCheck.bind(this)}/>
-          <input type="range" min="0" max="100" className="rythmSlider" defaultValue={this.props.defaultWeight} step="0.01" onInput={this.handleSlide.bind(this)} ref={this.state.sliderRef}></input>         
+          <input type="range" min="0" max="100" className={this.props.classRef} defaultValue={this.props.defaultWeight} step="0.01" onInput={this.handleSlide.bind(this)} ref={this.state.sliderRef}></input>         
         </label>
       </li>
     )
@@ -86,7 +36,7 @@ class NoteTypeSelect extends React.Component {
 
   //When one slider moves, all others are adjusted so that their total equals 100
   handleSlide(e){
-    const rythmSliders = Array.from(document.getElementsByClassName('rythmSlider'));
+    const rythmSliders = Array.from(document.getElementsByClassName(this.props.classRef));
     
     //Remove the slider that is being used
     var remainingSliders = [...rythmSliders];
@@ -134,9 +84,11 @@ class NoteTypeSelect extends React.Component {
     }
     
     //Send slider values up to parent
-    this.props.updateRythmWeights();
+    if(typeof this.props.updateWeights === "function"){
+        this.props.updateWeights();
+    }
   }
 
 }
 
-export default NoteTypePicker;
+export default WeightedSlider;
