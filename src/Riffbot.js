@@ -21,20 +21,22 @@ class RiffBot extends React.Component {
         initRythmWeights[rythm] = 100 / GuitarNotes.noteRythms.length;
       });
   
+      var distortion = new Tone.Distortion(0.6);
+
       this.state = {
       
         synth: new Tone.PolySynth(Tone.Synth, {
           oscillator : {
             type : "pwm",
-            modulationFrequency : 0.8
+            modulationFrequency : 0.8,
           },
           envelope : {
             attack : 0.05,
             decay : 0.8,
-            sustain : 0.25,
+            sustain : 0.1,
             release : 0.1,
           }
-        }).toDestination(),
+        }).chain(distortion, Tone.Master),
 
         selectedNotes: [],
         selectedNoteWeights: {},
@@ -42,6 +44,8 @@ class RiffBot extends React.Component {
         chords: false
 
       }   
+
+    
 
     }
   
@@ -57,12 +61,7 @@ class RiffBot extends React.Component {
         <div>
           <NotePicker synth={this.state.synth} selectNote={this.selectNote} deselectNote={this.deselectNote}></NotePicker>
 
-          <WeightedSelect collection={GuitarNotes.noteRythms} defaultWeights={this.state.selectedRythmWeights} 
-            setWeight={this.setRythmWeight} classRef="rythmSlider" symbolConverter={GuitarNotes.rythmCodeToSymbol}></WeightedSelect> 
-
-          <WeightedSelect collection={this.state.selectedNotes} defaultWeights={initNoteWeights} 
-            setWeight={this.setNoteWeight} classRef="noteSlider" symbolConverter={GuitarNotes.noteCodeToSymbol}></WeightedSelect>
-
+          
           <label>
             <input type="checkbox" onChange={this.toggleChords.bind(this)}/>
             <span>Allow Chords</span>
@@ -71,8 +70,15 @@ class RiffBot extends React.Component {
           <button onClick={() => this.playSelectedNotes()}>PLAY</button>
           <button onClick={() => this.deselectAllNotes()}>DESELECT ALL</button>
           <button onClick={() => this.makeRiff()}>Make Riff</button>
-          <button onClick={() => this.startRiff()}>Start Riff</button>
-          <button onClick={() => this.stopRiff()}>Stop Riff</button>
+          <button onClick={() => this.startRiff()}><i className="fa fa-play"></i></button>
+          <button onClick={() => this.stopRiff()}><i className="fa fa-stop"></i></button>
+
+          <WeightedSelect collection={GuitarNotes.noteRythms} defaultWeights={this.state.selectedRythmWeights} 
+            setWeight={this.setRythmWeight} classRef="rythmSlider" symbolConverter={GuitarNotes.rythmCodeToSymbol}></WeightedSelect> 
+
+          <WeightedSelect collection={this.state.selectedNotes} defaultWeights={initNoteWeights} 
+            setWeight={this.setNoteWeight} classRef="noteSlider" symbolConverter={GuitarNotes.noteCodeToSymbol}></WeightedSelect>
+
         </div>
       )
     }
@@ -141,7 +147,7 @@ class RiffBot extends React.Component {
       }else{
         this.setState({chords: false});
       }
-      console.log(this.state.selectedNoteWeights);
+      //console.log(this.state.selectedNoteWeights);
     }
   
     playSelectedNotes(){
@@ -161,7 +167,6 @@ class RiffBot extends React.Component {
     }
 
     randomNote(){
-      //return this.state.selectedNotes[Math.floor(Math.random() * this.state.selectedNotes.length)];
       var noteWeights = {...this.state.selectedNoteWeights};
 
       var chances = Object.keys(noteWeights).map(function(key){

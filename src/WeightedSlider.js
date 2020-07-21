@@ -15,11 +15,12 @@ class WeightedSlider extends React.Component {
   render(){
     return(
       <li>
-        <label>
           <span>{this.props.symbolConverter(this.state.note)}</span>
-          <input type="checkbox" onChange={this.handleCheck.bind(this)}/>
-          <input type="range" min="0" max="100" className={this.props.classRef} defaultValue={this.props.defaultWeight} step="0.01" onInput={this.handleSlide.bind(this)} ref={this.state.sliderRef}></input>         
-        </label>
+          <input type="range" min="0" max="100" className={this.props.classRef} defaultValue={this.props.defaultWeight} step="0.01" onInput={this.handleSlide.bind(this)} ref={this.state.sliderRef}></input>
+          <label className="lock">
+            <input type="checkbox" className="lock" onChange={this.handleCheck.bind(this)}/>
+            <i id ={"lockToggle-" + this.props.id} class="fa fa-unlock lock"></i>
+          </label>
       </li>
     )
   }
@@ -28,8 +29,11 @@ class WeightedSlider extends React.Component {
 
     if(e.target.checked){
       this.state.sliderRef.current.disabled = true;
+      document.getElementById("lockToggle-" + this.props.id).className = "fa fa-lock lock";
     }else{
       this.state.sliderRef.current.disabled = false;
+      e.target.className = "unlock";
+      document.getElementById("lockToggle-" + this.props.id).className = "fa fa-unlock lock";
     }
   
   }
