@@ -33,8 +33,8 @@ class WeightedSelect extends React.Component {
       }
     }
 
-    const sliders = this.props.collection.map((type, index) =>
-      <WeightedSlider key={type + ":" + index} note={type} id={type + ":" + index} defaultWeight={this.props.defaultWeights[type]} classRef={this.props.classRef} 
+    const sliders = this.props.collection.map((element, index) =>
+      <WeightedSlider key={element + ":" + index} identifier={element} id={element + ":" + index} defaultWeight={this.props.defaultWeights[element]} classRef={this.props.classRef} 
       ref={this.selectionRefs[index]} updateWeights={this.updateWeights} symbolConverter={this.props.symbolConverter}></WeightedSlider>
     );       
       
@@ -50,7 +50,7 @@ class WeightedSelect extends React.Component {
   updateWeights(){
 
     this.selectionRefs.forEach(selectRef => {
-      this.props.setWeight(selectRef.current.state.note, parseFloat(selectRef.current.state.sliderRef.current.value));
+      this.props.setWeight(selectRef.current.state.identifier, parseFloat(selectRef.current.state.sliderRef.current.value));
     });
   }
   

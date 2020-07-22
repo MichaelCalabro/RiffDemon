@@ -16,26 +16,26 @@ class NotePicker extends React.Component {
   
     render(){
   
-      const string1 = GuitarNotes.string1.map((fretNote) =>
-        <GuitarFret key={fretNote} note={fretNote} synth={this.state.synth} selectNote={this.selectNote} deselectNote={this.deselectNote}></GuitarFret>
+      const string1 = GuitarNotes.strings[0].map((fretNote, index) =>
+        <GuitarFret key={fretNote + ":1"} note={fretNote} string={1} fret={index} synth={this.state.synth} selectNote={this.selectNote} deselectNote={this.deselectNote}></GuitarFret>
       );
-      const string2 = GuitarNotes.string2.map((fretNote) =>
-        <GuitarFret key={fretNote} note={fretNote} synth={this.state.synth} selectNote={this.selectNote} deselectNote={this.deselectNote}></GuitarFret>
+      const string2 = GuitarNotes.strings[1].map((fretNote, index) =>
+        <GuitarFret key={fretNote + ":2"} note={fretNote} string={2} fret={index} synth={this.state.synth} selectNote={this.selectNote} deselectNote={this.deselectNote}></GuitarFret>
       );
-      const string3 = GuitarNotes.string3.map((fretNote) =>
-        <GuitarFret key={fretNote} note={fretNote} synth={this.state.synth} selectNote={this.selectNote} deselectNote={this.deselectNote}></GuitarFret>
+      const string3 = GuitarNotes.strings[2].map((fretNote, index) =>
+        <GuitarFret key={fretNote + ":3"} note={fretNote} string={3} fret={index} synth={this.state.synth} selectNote={this.selectNote} deselectNote={this.deselectNote}></GuitarFret>
       );
-      const string4 = GuitarNotes.string4.map((fretNote) =>
-        <GuitarFret key={fretNote} note={fretNote} synth={this.state.synth} selectNote={this.selectNote} deselectNote={this.deselectNote}></GuitarFret>
+      const string4 = GuitarNotes.strings[3].map((fretNote, index) =>
+        <GuitarFret key={fretNote + ":4"} note={fretNote} string={4} fret={index} synth={this.state.synth} selectNote={this.selectNote} deselectNote={this.deselectNote}></GuitarFret>
       );
-      const string5 = GuitarNotes.string5.map((fretNote) =>
-        <GuitarFret key={fretNote} note={fretNote} synth={this.state.synth} selectNote={this.selectNote} deselectNote={this.deselectNote}></GuitarFret>
+      const string5 = GuitarNotes.strings[4].map((fretNote, index) =>
+        <GuitarFret key={fretNote + ":5"} note={fretNote} string={5} fret={index} synth={this.state.synth} selectNote={this.selectNote} deselectNote={this.deselectNote}></GuitarFret>
       );
-      const string6 = GuitarNotes.string6.map((fretNote) =>
-        <GuitarFret key={fretNote} note={fretNote} synth={this.state.synth} selectNote={this.selectNote} deselectNote={this.deselectNote}></GuitarFret>
+      const string6 = GuitarNotes.strings[5].map((fretNote, index) =>
+        <GuitarFret key={fretNote + ":6"} note={fretNote} string={6} fret={index} synth={this.state.synth} selectNote={this.selectNote} deselectNote={this.deselectNote}></GuitarFret>
       );
-      const fretNumbers = GuitarNotes.string6.map((fretNote, index) =>
-        <th key={index} className="fret">{index}</th>
+      const fretNumbers = GuitarNotes.strings[0].map((fretNote, index) =>
+        <th key={"fret" + index} className="fret">{index}</th>
       );
   
       return(
@@ -84,16 +84,16 @@ class NotePicker extends React.Component {
     handleCheck(e){
   
       if(e.target.checked){
-        this.props.selectNote(this.state.note);
+        this.props.selectNote(this.props.string + "" + this.props.fret);
         this.playNote();
       }else{
-        this.props.deselectNote(this.state.note);
+        this.props.deselectNote(this.props.string + "" + this.props.fret);
       }
      
     }
   
     playNote(){
-      this.state.synth.triggerAttackRelease(this.state.note, "4n");  
+      this.state.synth.triggerAttackRelease(this.state.note, "2n");  
     }
   
   

@@ -98,11 +98,11 @@ input[type=range]:focus::-webkit-slider-runnable-track {
   background: #0000007c;
 }
 
-ul{
+ul {
   list-style-type: none;
 }
 
-button{
+button {
   background: #0000007e;
   color: aliceblue;
   border: none;
@@ -111,4 +111,8 @@ button{
   text-align: center;
   display: inline-block;
   border-radius: 2px;
+}
+
+p.noteSymbol{
+  display: inline;
 }

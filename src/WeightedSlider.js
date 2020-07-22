@@ -6,7 +6,7 @@ class WeightedSlider extends React.Component {
     super(props);
 
     this.state = {
-      note: props.note,
+      identifier: props.identifier,
       sliderRef: React.createRef()
     }
 
@@ -15,11 +15,11 @@ class WeightedSlider extends React.Component {
   render(){
     return(
       <li>
-          <span>{this.props.symbolConverter(this.state.note)}</span>
+          <span>{this.props.symbolConverter(this.state.identifier)}</span>
           <input type="range" min="0" max="100" className={this.props.classRef} defaultValue={this.props.defaultWeight} step="0.01" onInput={this.handleSlide.bind(this)} ref={this.state.sliderRef}></input>
           <label className="lock">
             <input type="checkbox" className="lock" onChange={this.handleCheck.bind(this)}/>
-            <i id ={"lockToggle-" + this.props.id} class="fa fa-unlock lock"></i>
+            <i id ={"lockToggle-" + this.props.id} className="fa fa-unlock lock"></i>
           </label>
       </li>
     )

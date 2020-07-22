@@ -21,22 +21,25 @@ class RiffBot extends React.Component {
         initRythmWeights[rythm] = 100 / GuitarNotes.noteRythms.length;
       });
   
-      var distortion = new Tone.Distortion(0.6);
+      var distortion = new Tone.Distortion(0.8);
 
       this.state = {
       
         synth: new Tone.PolySynth(Tone.Synth, {
           oscillator : {
             type : "pwm",
-            modulationFrequency : 0.8,
+            modulationFrequency : 0.1,
           },
           envelope : {
-            attack : 0.05,
-            decay : 0.8,
-            sustain : 0.1,
-            release : 0.1,
+            attack : 0.01,
+            decay : 10,
+            sustain : 0,
+            release : 0,
+            decayCurve : "exponential"
           }
         }).chain(distortion, Tone.Master),
+
+        riffNotes: [],
 
         selectedNotes: [],
         selectedNoteWeights: {},
@@ -55,7 +58,6 @@ class RiffBot extends React.Component {
       this.state.selectedNotes.forEach(note => {
         initNoteWeights[note] = 0;
       });
-  
   
       return(
         <div>
@@ -77,7 +79,7 @@ class RiffBot extends React.Component {
             setWeight={this.setRythmWeight} classRef="rythmSlider" symbolConverter={GuitarNotes.rythmCodeToSymbol}></WeightedSelect> 
 
           <WeightedSelect collection={this.state.selectedNotes} defaultWeights={initNoteWeights} 
-            setWeight={this.setNoteWeight} classRef="noteSlider" symbolConverter={GuitarNotes.noteCodeToSymbol}></WeightedSelect>
+            setWeight={this.setNoteWeight} classRef="noteSlider" symbolConverter={GuitarNotes.tabToNoteSymbolSubscript}></WeightedSelect>
 
         </div>
       )
@@ -147,7 +149,6 @@ class RiffBot extends React.Component {
       }else{
         this.setState({chords: false});
       }
-      //console.log(this.state.selectedNoteWeights);
     }
   
     playSelectedNotes(){
@@ -173,7 +174,7 @@ class RiffBot extends React.Component {
         return noteWeights[key];
       });
 
-      return this.weightedRandom(Object.keys(noteWeights), chances);
+      return GuitarNotes.tabToNoteCode(this.weightedRandom(Object.keys(noteWeights), chances));
     }
 
     randomNoteOrChord(){
@@ -242,6 +243,7 @@ class RiffBot extends React.Component {
       Tone.Transport.cancel();
       
       const bars = 4;
+      const notes = [];
       
       for(let bar = 0; bar < bars; bar++){
 
@@ -256,6 +258,7 @@ class RiffBot extends React.Component {
           if(beats >= 1){
             let randomNote = this.randomNoteOrChord();
             Tone.Transport.schedule(time => this.triggerNote(time, randomNote, noteDuration), bar + ':' + currentBeat  + ':0');
+            notes.push(randomNote);
           }
           else{
             let numNotes = BarComposition.notesPerBeat[noteDuration];
@@ -264,6 +267,7 @@ class RiffBot extends React.Component {
             for(let notePos = 0; notePos <= numNotes; notePos += (4 / numNotes)){
               let randomNote = this.randomNoteOrChord();
               Tone.Transport.schedule(time => this.triggerNote(time, randomNote, noteDuration), bar + ':' + currentBeat  + ':' + notePos);
+              notes.push(randomNote);
             }
             beats = 1;
 
@@ -276,9 +280,14 @@ class RiffBot extends React.Component {
   
       }
 
+      this.setState({
+        riffNotes: notes
+      });
+
       Tone.Transport.loopEnd = bars + 'm';
       Tone.Transport.loop = true;
 
+      
   }
   
   
