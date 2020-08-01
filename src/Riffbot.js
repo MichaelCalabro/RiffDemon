@@ -2,9 +2,9 @@ import * as Tone from 'tone';
 import React from 'react';
 import NotePicker from './NotePicker';
 import WeightedSelect from './WeightedSelect';
-import WeightedSlider from './WeightedSlider'
 import * as BarComposition from './BarComposition';
 import * as GuitarNotes from './notes';
+import TabDisplay from './TabDisplay';
 
 class RiffBot extends React.Component {
     constructor(props){
@@ -75,11 +75,13 @@ class RiffBot extends React.Component {
           <button onClick={() => this.startRiff()}><i className="fa fa-play"></i></button>
           <button onClick={() => this.stopRiff()}><i className="fa fa-stop"></i></button>
 
+          <TabDisplay notes={this.state.riffNotes}></TabDisplay>
+
           <WeightedSelect collection={GuitarNotes.noteRythms} defaultWeights={this.state.selectedRythmWeights} 
             setWeight={this.setRythmWeight} classRef="rythmSlider" symbolConverter={GuitarNotes.rythmCodeToSymbol}></WeightedSelect> 
 
           <WeightedSelect collection={this.state.selectedNotes} defaultWeights={initNoteWeights} 
-            setWeight={this.setNoteWeight} classRef="noteSlider" symbolConverter={GuitarNotes.tabToNoteSymbolSubscript}></WeightedSelect>
+            setWeight={this.setNoteWeight} classRef="noteSlider" symbolConverter={GuitarNotes.tabToNoteDomNode}></WeightedSelect>
 
         </div>
       )
@@ -174,7 +176,7 @@ class RiffBot extends React.Component {
         return noteWeights[key];
       });
 
-      return GuitarNotes.tabToNoteCode(this.weightedRandom(Object.keys(noteWeights), chances));
+      return this.weightedRandom(Object.keys(noteWeights), chances);
     }
 
     randomNoteOrChord(){
@@ -256,18 +258,22 @@ class RiffBot extends React.Component {
 
           //Whole, half, quarter notes
           if(beats >= 1){
-            let randomNote = this.randomNoteOrChord();
+            let randomNoteTab = this.randomNoteOrChord();
+            let randomNote = GuitarNotes.tabToNoteCode(randomNoteTab);
+
             Tone.Transport.schedule(time => this.triggerNote(time, randomNote, noteDuration), bar + ':' + currentBeat  + ':0');
-            notes.push(randomNote);
+            notes.push(randomNoteTab);
           }
           else{
             let numNotes = BarComposition.notesPerBeat[noteDuration];
 
             //Fill 1 beat with eigth, eighth triplet, sixteenth, or sixteenth triplet notes
             for(let notePos = 0; notePos <= numNotes; notePos += (4 / numNotes)){
-              let randomNote = this.randomNoteOrChord();
+              let randomNoteTab = this.randomNoteOrChord();
+              let randomNote = GuitarNotes.tabToNoteCode(randomNoteTab);
+
               Tone.Transport.schedule(time => this.triggerNote(time, randomNote, noteDuration), bar + ':' + currentBeat  + ':' + notePos);
-              notes.push(randomNote);
+              notes.push(randomNoteTab);
             }
             beats = 1;
 

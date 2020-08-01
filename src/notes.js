@@ -31,16 +31,16 @@ export function rythmCodeToSymbol(rythmCode){
 
 export function tabToNoteCode(tab){
     if(tab){
-        var split = tab.split("");
+        var split = tab.split(":");
         return strings[split[0]-1][split[1]];
     }else{
         return tab;
     }
 }
 
-export function tabToNoteSymbolSubscript(tab){
+export function tabToNoteDomNode(tab){
     if(tab){
-        var split = tab.split("");
+        var split = tab.split(":");
         return (
             <p className="noteSymbol">{noteCodeToSymbol(tabToNoteCode(tab))}<sub>{split[0]}</sub></p>
         );

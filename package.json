@@ -32,7 +32,9 @@
       "last 1 safari version"
     ]
   },
-    "typeAcquisition": {
-      "include": ["tone"]
-    }
+  "typeAcquisition": {
+    "include": [
+      "tone"
+    ]
+  }
 }

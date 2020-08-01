@@ -84,10 +84,10 @@ class NotePicker extends React.Component {
     handleCheck(e){
   
       if(e.target.checked){
-        this.props.selectNote(this.props.string + "" + this.props.fret);
+        this.props.selectNote(this.props.string + ":" + this.props.fret);
         this.playNote();
       }else{
-        this.props.deselectNote(this.props.string + "" + this.props.fret);
+        this.props.deselectNote(this.props.string + ":" + this.props.fret);
       }
      
     }
