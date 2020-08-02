@@ -11,6 +11,7 @@ export const strings = [
 ];
 
 export const noteRythms = ['1n', '2n', '4n', '8n', '8t', '16n', '16t'];
+
 export const noteRythmSymbols = {
     '1n' : '𝅝',
     '2n' : '𝅗𝅥',
@@ -20,6 +21,26 @@ export const noteRythmSymbols = {
     '16n' : '𝅘𝅥𝅯𝅘𝅥𝅯𝅘𝅥𝅯𝅘𝅥𝅯',
     '16t' : '𝅘𝅥𝅯𝅘𝅥𝅯𝅘𝅥𝅯𝅘𝅥𝅯𝅘𝅥𝅯𝅘𝅥𝅯'
 };
+
+export const rythmToTabSpace = {
+    '1n' : '        ',
+    '2n' : '    ',
+    '4n' : '  ',
+    '8n' : ' ',
+    '8t' : ' ',
+    '16n' : '',
+    '16t' : ''
+}
+
+export const notesPerBeat = {
+    '1n' : 0.25,
+    '2n' : 0.5,
+    '4n' : 1,
+    '8n' : 2,
+    '8t' : 3,
+    '16n' : 4,
+    '16t' : 6
+}
 
 export function noteCodeToSymbol(noteCode){
     return noteCode.replace('#', '♯').replace('b','♭');

@@ -2,7 +2,6 @@ import * as Tone from 'tone';
 import React from 'react';
 import NotePicker from './NotePicker';
 import WeightedSelect from './WeightedSelect';
-import * as BarComposition from './BarComposition';
 import * as GuitarNotes from './notes';
 import TabDisplay from './TabDisplay';
 
@@ -127,22 +126,26 @@ class RiffBot extends React.Component {
     }
 
     setNoteWeight(note, weight){
-      this.setState(prevState => ({
-        selectedNoteWeights:{
-          ...prevState.selectedNoteWeights,
-          [note]: weight,
-        }
-      }));
+      // this.setState(prevState => ({
+      //   selectedNoteWeights:{
+      //     ...prevState.selectedNoteWeights,
+      //     [note]: weight,
+      //   }
+      // }));
+
+      this.state.selectedNoteWeights[note] = weight;
     }
 
 
     setRythmWeight(rythm, weight){
-      this.setState(prevState => ({
-        selectedRythmWeights:{
-          ...prevState.selectedRythmWeights,
-          [rythm]: weight,
-        }
-      }));
+      // this.setState(prevState => ({
+      //   selectedRythmWeights:{
+      //     ...prevState.selectedRythmWeights,
+      //     [rythm]: weight,
+      //   }
+      // }));
+
+      this.state.selectedRythmWeights[rythm] = weight;
     }
 
     toggleChords(e){
@@ -195,7 +198,7 @@ class RiffBot extends React.Component {
       }
     }
 
-    randomNoteType(remainingBeats){
+    randomNoteRythm(remainingBeats){
 
       let reweightedRythms = {...this.state.selectedRythmWeights};
       let weightToDistribute = 0;
@@ -203,7 +206,7 @@ class RiffBot extends React.Component {
 
       //Elminate rythms that dont fit in remaining beats
       for(var key in reweightedRythms){
-        let beats = 1 / BarComposition.notesPerBeat[key];
+        let beats = 1 / GuitarNotes.notesPerBeat[key];
 
         if(beats > remainingBeats){
           weightToDistribute += reweightedRythms[key];
@@ -253,37 +256,36 @@ class RiffBot extends React.Component {
         let currentBeat = 0;
 
         while(beatsRemaining > 0){
-          let noteDuration = this.randomNoteType(beatsRemaining);
-          let beats = 1 / BarComposition.notesPerBeat[noteDuration];
+          let noteRythm = this.randomNoteRythm(beatsRemaining);
+          let beats = 1 / GuitarNotes.notesPerBeat[noteRythm];
 
           //Whole, half, quarter notes
           if(beats >= 1){
             let randomNoteTab = this.randomNoteOrChord();
             let randomNote = GuitarNotes.tabToNoteCode(randomNoteTab);
 
-            Tone.Transport.schedule(time => this.triggerNote(time, randomNote, noteDuration), bar + ':' + currentBeat  + ':0');
-            notes.push(randomNoteTab);
+            Tone.Transport.schedule(time => this.triggerNote(time, randomNote, noteRythm), bar + ':' + currentBeat  + ':0');
+            notes.push(randomNoteTab + ":" + noteRythm);
           }
           else{
-            let numNotes = BarComposition.notesPerBeat[noteDuration];
+            let numNotes = GuitarNotes.notesPerBeat[noteRythm];
 
             //Fill 1 beat with eigth, eighth triplet, sixteenth, or sixteenth triplet notes
-            for(let notePos = 0; notePos <= numNotes; notePos += (4 / numNotes)){
+            for(let notePos = 0; notePos < 3.9; notePos += (4 / numNotes)){
               let randomNoteTab = this.randomNoteOrChord();
               let randomNote = GuitarNotes.tabToNoteCode(randomNoteTab);
 
-              Tone.Transport.schedule(time => this.triggerNote(time, randomNote, noteDuration), bar + ':' + currentBeat  + ':' + notePos);
-              notes.push(randomNoteTab);
+              Tone.Transport.schedule(time => this.triggerNote(time, randomNote, noteRythm), bar + ':' + currentBeat  + ':' + notePos);
+              notes.push(randomNoteTab + ":" + noteRythm);
             }
-            beats = 1;
 
-          }   
+            beats = 1;
+          }
 
           beatsRemaining -= beats;
           currentBeat = 4 - beatsRemaining;
-
         }
-  
+         
       }
 
       this.setState({
@@ -291,12 +293,9 @@ class RiffBot extends React.Component {
       });
 
       Tone.Transport.loopEnd = bars + 'm';
-      Tone.Transport.loop = true;
-
-      
+      Tone.Transport.loop = true;     
   }
-  
-  
-  }
+   
+}
 
-  export default RiffBot;
+export default RiffBot;

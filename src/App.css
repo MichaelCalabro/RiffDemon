@@ -113,6 +113,35 @@ button {
   border-radius: 2px;
 }
 
-p.noteSymbol{
+p.noteSymbol {
   display: inline;
+}
+
+#jtabRender {
+  width: 100%;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #0000007c; 
+  border-radius: 6px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #d11a1a; 
+  border-radius: 6px;
+  border: 1px solid #470000;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #d11a1a80; 
 }
