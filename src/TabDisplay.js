@@ -26,7 +26,7 @@ class TabDisplay extends React.Component {
   }
 
 
-  //Takes array of notes of form: string:fret:rythm
+  //Takes array of notes of form: [string:fret,string:fret,...]-rythm
   //Returns jtab notation
   generateTabNotation(notes){
 
@@ -36,17 +36,19 @@ class TabDisplay extends React.Component {
 
     notes.forEach(note => {
       if(note){
-        let tokens = note.split(":");
-        let string = tokens[0];
-        let fret = tokens[1];
-        let rythm = tokens[2];
+
+        let tokens = note.split("-");
+
+        let chord = tokens[0];
+        let rythm = tokens[1];
 
         barBeats += 1 / GuitarNotes.notesPerBeat[rythm];
         
-        notation += " $" + string + " " + fret + " " + GuitarNotes.rythmToTabSpace[rythm];
+        //notation += " $" + string + " " + fret + " " + GuitarNotes.rythmToTabSpace[rythm];
+        notation += this.noteToTabNotation(chord) + GuitarNotes.rythmToTabSpace[rythm];
 
         if(barBeats >= 3.9){
-          notation += "|";
+          notation += " |";
           barBeats = 0;
         }
 
@@ -56,6 +58,25 @@ class TabDisplay extends React.Component {
     notation += "|";
 
     return  notation;
+  }
+
+  //Takes array of note of form: [string:fret,string:fret,...]
+  //Returns jtab notation
+  noteToTabNotation(note){
+  
+    var notation = " ";
+    var chordNotes = note.split(",");
+
+    chordNotes.forEach(chordNote => {
+      let tokens = chordNote.split(":");
+      let string = tokens[0];
+      let fret = tokens[1];
+
+      notation += "$" + string + "." + fret + "."
+
+    });
+
+    return notation;
   }
 
 }

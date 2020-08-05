@@ -11,6 +11,8 @@ class RiffBot extends React.Component {
   
       this.selectNote = this.selectNote.bind(this);
       this.deselectNote = this.deselectNote.bind(this);
+      this.selectChordNote = this.selectChordNote.bind(this);
+      this.deselectChordNote = this.deselectChordNote.bind(this);
       this.setNoteWeight = this.setNoteWeight.bind(this);
       this.setRythmWeight = this.setRythmWeight.bind(this);
       this.triggerNote = this.triggerNote.bind(this);
@@ -43,12 +45,11 @@ class RiffBot extends React.Component {
         selectedNotes: [],
         selectedNoteWeights: {},
         selectedRythmWeights: initRythmWeights,
-        chords: false
+
+        chordMode: false,
+        chordSelectedNotes: []
 
       }   
-
-    
-
     }
   
     render(){
@@ -57,18 +58,26 @@ class RiffBot extends React.Component {
       this.state.selectedNotes.forEach(note => {
         initNoteWeights[note] = 0;
       });
+
+      var notePicker = this.state.chordMode ? 
+        <NotePicker synth={this.state.synth} selectNote={this.selectChordNote} deselectNote={this.deselectChordNote}></NotePicker>
+      :
+        <NotePicker synth={this.state.synth} selectNote={this.selectNote} deselectNote={this.deselectNote}></NotePicker>;
+
+      var addChordButton = this.state.chordMode ? 
+        <button onClick={() => this.addChord()}>ADD CHORD</button> : null;
   
       return(
         <div>
-          <NotePicker synth={this.state.synth} selectNote={this.selectNote} deselectNote={this.deselectNote}></NotePicker>
-
-          
+          {notePicker}
+    
           <label>
             <input type="checkbox" onChange={this.toggleChords.bind(this)}/>
-            <span>Allow Chords</span>
+            <span>Chord Mode</span>
           </label>
+
+          {addChordButton}
   
-          <button onClick={() => this.playSelectedNotes()}>PLAY</button>
           <button onClick={() => this.deselectAllNotes()}>DESELECT ALL</button>
           <button onClick={() => this.makeRiff()}>Make Riff</button>
           <button onClick={() => this.startRiff()}><i className="fa fa-play"></i></button>
@@ -108,6 +117,46 @@ class RiffBot extends React.Component {
       });
       
     }
+
+    selectChordNote(note){
+      this.setState({
+        chordSelectedNotes : this.state.chordSelectedNotes.concat(note)
+      });   
+    }
+
+    deselectChordNote(note){
+      const newNotes = this.state.chordSelectedNotes;
+      const index = newNotes.indexOf(note);
+      if(index > -1){
+        newNotes.splice(index, 1);
+      }
+
+      this.setState({
+        chordSelectedNotes: newNotes,
+      });
+
+    }
+
+    addChord(){
+
+      if(this.state.chordSelectedNotes.length == 0){
+        return;
+      }
+
+      var chord = "";
+
+      this.state.chordSelectedNotes.forEach(note => {
+        chord += note + ",";
+      });
+
+      this.setState({
+        selectedNotes : this.state.selectedNotes.concat(chord)
+      });
+
+      console.log(this.state.chordSelectedNotes);
+      this.playSelectedChordNotes();
+      
+    }
   
     deselectAllNotes(){
       var cbs = document.querySelectorAll('td.fret input');
@@ -120,7 +169,8 @@ class RiffBot extends React.Component {
   
       this.setState({
         selectedNotes: [],
-        selectedNoteWeights: {}
+        selectedNoteWeights: {},
+        chordSelectedNotes: []
       });
       
     }
@@ -150,14 +200,14 @@ class RiffBot extends React.Component {
 
     toggleChords(e){
       if(e.target.checked){
-        this.setState({chords: true });
+        this.setState({chordMode: true });
       }else{
-        this.setState({chords: false});
+        this.setState({chordMode: false});
       }
     }
   
-    playSelectedNotes(){
-      this.state.synth.triggerAttackRelease(this.state.selectedNotes, "2n");
+    playSelectedChordNotes(){
+      this.state.synth.triggerAttackRelease(GuitarNotes.tabToNoteCode(this.state.chordSelectedNotes), "2n");
     }
 
     startRiff(){
@@ -179,23 +229,21 @@ class RiffBot extends React.Component {
         return noteWeights[key];
       });
 
-      return this.weightedRandom(Object.keys(noteWeights), chances);
-    }
+      var note = this.weightedRandom(Object.keys(noteWeights), chances);
 
-    randomNoteOrChord(){
-
-      if(!this.state.chords){
-        return this.randomNote();
+      //Chord
+      if(note.includes(',')){
+        var chord = [];
+        var chordNotes = note.split(',');
+        chordNotes.forEach(chordNote => {
+          if(chordNote != ""){
+            chord.push(chordNote);
+          }
+        });
+        return chord;
       }
-      else{
-        var notesToPlay = [];
-        var numNotes = 1 + Math.floor(Math.random() * this.state.selectedNotes.length);
-        for(var i = 0; i < numNotes; i++){
-          notesToPlay.push(this.randomNote());
-        }
-
-        return notesToPlay;
-      }
+        
+      return note;  
     }
 
     randomNoteRythm(remainingBeats){
@@ -247,7 +295,9 @@ class RiffBot extends React.Component {
       //Clear transport for new riff
       Tone.Transport.cancel();
       
-      const bars = 4;
+      const bars = 4; //TODO: configurable # of bars
+
+      //Store notes to be used for tablature display
       const notes = [];
       
       for(let bar = 0; bar < bars; bar++){
@@ -261,22 +311,22 @@ class RiffBot extends React.Component {
 
           //Whole, half, quarter notes
           if(beats >= 1){
-            let randomNoteTab = this.randomNoteOrChord();
+            let randomNoteTab = this.randomNote();
             let randomNote = GuitarNotes.tabToNoteCode(randomNoteTab);
 
             Tone.Transport.schedule(time => this.triggerNote(time, randomNote, noteRythm), bar + ':' + currentBeat  + ':0');
-            notes.push(randomNoteTab + ":" + noteRythm);
+            notes.push(randomNoteTab + "-" + noteRythm);
           }
           else{
             let numNotes = GuitarNotes.notesPerBeat[noteRythm];
 
             //Fill 1 beat with eigth, eighth triplet, sixteenth, or sixteenth triplet notes
             for(let notePos = 0; notePos < 3.9; notePos += (4 / numNotes)){
-              let randomNoteTab = this.randomNoteOrChord();
+              let randomNoteTab = this.randomNote();
               let randomNote = GuitarNotes.tabToNoteCode(randomNoteTab);
 
               Tone.Transport.schedule(time => this.triggerNote(time, randomNote, noteRythm), bar + ':' + currentBeat  + ':' + notePos);
-              notes.push(randomNoteTab + ":" + noteRythm);
+              notes.push(randomNoteTab + "-" + noteRythm);
             }
 
             beats = 1;

@@ -52,8 +52,22 @@ export function rythmCodeToSymbol(rythmCode){
 
 export function tabToNoteCode(tab){
     if(tab){
-        var split = tab.split(":");
-        return strings[split[0]-1][split[1]];
+
+        if(Array.isArray(tab)){
+            var noteCodes = [];
+
+            tab.forEach(note => {
+                let tokens = note.split(':');
+                noteCodes.push(strings[tokens[0]-1][tokens[1]]);
+            });
+            
+            return noteCodes;
+        }
+        else{
+            let tokens = tab.split(':');
+            return strings[tokens[0]-1][tokens[1]];
+        }
+  
     }else{
         return tab;
     }
@@ -61,10 +75,13 @@ export function tabToNoteCode(tab){
 
 export function tabToNoteDomNode(tab){
     if(tab){
-        var split = tab.split(":");
-        return (
-            <p className="noteSymbol">{noteCodeToSymbol(tabToNoteCode(tab))}<sub>{split[0]}</sub></p>
+
+        var notes = tab.split(',');
+        var domNode = notes.map((note, index) =>
+            <p key={note + index} className="noteSymbol">{noteCodeToSymbol(tabToNoteCode(note))}<sub>{note.split(':')[0]}</sub></p>
         );
+        return domNode;
+
     }else{
         return tab;
     }

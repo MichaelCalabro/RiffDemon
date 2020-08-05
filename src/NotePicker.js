@@ -6,15 +6,16 @@ class NotePicker extends React.Component {
     constructor(props){
       super(props);
   
-      this.selectNote = this.props.selectNote;
-      this.deselectNote = this.props.deselectNote;
-  
       this.state = {
         synth: props.synth
       }
+
     }
   
     render(){
+
+      this.selectNote = this.props.selectNote;
+      this.deselectNote = this.props.deselectNote;
   
       const string1 = GuitarNotes.strings[0].map((fretNote, index) =>
         <GuitarFret key={fretNote + ":1"} note={fretNote} string={1} fret={index} synth={this.state.synth} selectNote={this.selectNote} deselectNote={this.deselectNote}></GuitarFret>
