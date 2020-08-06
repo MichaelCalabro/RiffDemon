@@ -40,7 +40,7 @@ class NotePicker extends React.Component {
       );
   
       return(
-        <div>
+        <div className="notePicker">
           <table className="guitarNeck">
             <tbody>
               <tr className="guitarString"><th className="fret">1</th>{string1}</tr>

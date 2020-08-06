@@ -59,26 +59,41 @@ class RiffBot extends React.Component {
         initNoteWeights[note] = 0;
       });
 
-      var notePicker = this.state.chordMode ? 
-        <NotePicker synth={this.state.synth} selectNote={this.selectChordNote} deselectNote={this.deselectChordNote}></NotePicker>
+      var chordPicker = this.state.chordMode ? 
+        <div>
+          <NotePicker synth={this.state.synth} selectNote={this.selectChordNote} deselectNote={this.deselectChordNote}></NotePicker>
+          <button onClick={() => this.addChord()}>ADD CHORD</button>
+        </div>
       :
-        <NotePicker synth={this.state.synth} selectNote={this.selectNote} deselectNote={this.deselectNote}></NotePicker>;
+        null;
 
-      var addChordButton = this.state.chordMode ? 
-        <button onClick={() => this.addChord()}>ADD CHORD</button> : null;
-  
       return(
         <div>
-          {notePicker}
+
+          <NotePicker synth={this.state.synth} selectNote={this.selectNote} deselectNote={this.deselectNote}></NotePicker>
+          {chordPicker}
     
-          <label>
+          <label className="fret">
             <input type="checkbox" onChange={this.toggleChords.bind(this)}/>
             <span>Chord Mode</span>
           </label>
 
-          {addChordButton}
-  
           <button onClick={() => this.deselectAllNotes()}>DESELECT ALL</button>
+
+          <select name="bars" id="barSelect">
+            <optgroup label="Bars">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+            </optgroup>
+          </select>
+  
+          
           <button onClick={() => this.makeRiff()}>Make Riff</button>
           <button onClick={() => this.startRiff()}><i className="fa fa-play"></i></button>
           <button onClick={() => this.stopRiff()}><i className="fa fa-stop"></i></button>
@@ -139,7 +154,7 @@ class RiffBot extends React.Component {
 
     addChord(){
 
-      if(this.state.chordSelectedNotes.length == 0){
+      if(this.state.chordSelectedNotes.length === 0){
         return;
       }
 
@@ -153,7 +168,6 @@ class RiffBot extends React.Component {
         selectedNotes : this.state.selectedNotes.concat(chord)
       });
 
-      console.log(this.state.chordSelectedNotes);
       this.playSelectedChordNotes();
       
     }
@@ -232,7 +246,7 @@ class RiffBot extends React.Component {
       var note = this.weightedRandom(Object.keys(noteWeights), chances);
 
       //Chord
-      if(note.includes(',')){
+      if(note && note.includes(',')){
         var chord = [];
         var chordNotes = note.split(',');
         chordNotes.forEach(chordNote => {
@@ -290,16 +304,32 @@ class RiffBot extends React.Component {
 
     }
 
+    //Wrapper for createRiff
     makeRiff(){
+
+        //Clear transport for new riff
+        Tone.Transport.cancel();
+
+        var notes = [];
+
+        //Create riff if > 0 notes are selected and weighted
+        if(Object.keys(this.state.selectedNoteWeights).length != 0){
+          notes = this.createRiff();
+        }
       
-      //Clear transport for new riff
-      Tone.Transport.cancel();
-      
-      const bars = 4; //TODO: configurable # of bars
+        this.setState({
+          riffNotes: notes
+        });
+    
+    }
+
+    createRiff(){
+
+      const bars = parseInt(document.getElementById("barSelect").value);
 
       //Store notes to be used for tablature display
-      const notes = [];
-      
+      var notes = [];
+
       for(let bar = 0; bar < bars; bar++){
 
         let beatsRemaining = 4; //4 Beats per bar. TODO: add configurable time signatures
@@ -334,17 +364,14 @@ class RiffBot extends React.Component {
 
           beatsRemaining -= beats;
           currentBeat = 4 - beatsRemaining;
-        }
-         
+        }   
       }
 
-      this.setState({
-        riffNotes: notes
-      });
-
       Tone.Transport.loopEnd = bars + 'm';
-      Tone.Transport.loop = true;     
-  }
+      Tone.Transport.loop = true;    
+
+      return notes;
+    }
    
 }
 

@@ -33,7 +33,7 @@ class TabDisplay extends React.Component {
     var notation = "$ ";
 
     var barBeats = 0;
-
+    
     notes.forEach(note => {
       if(note){
 
@@ -60,7 +60,7 @@ class TabDisplay extends React.Component {
     return  notation;
   }
 
-  //Takes array of note of form: [string:fret,string:fret,...]
+  //Takes note of form: [string:fret,string:fret,...]
   //Returns jtab notation
   noteToTabNotation(note){
   
