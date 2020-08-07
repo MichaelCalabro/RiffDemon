@@ -1,7 +1,7 @@
 .App {
   text-align: center;
   color: aliceblue;
-  background: #ffffff25;
+  background: #ffffff11;
   padding: 1em;
 }
 
@@ -59,6 +59,17 @@ input[type=checkbox][disabled] + span {
   background: #00000062;
 }
 
+label.mainCheckBox {
+  font-family: Pirulen, 'Times New Roman', Times, serif; 
+  font-size: small;
+  position: relative;
+  cursor: pointer;
+}
+
+label.mainCheckBox [type=checkbox]{
+  display: none;
+}
+
 label.lock [type=checkbox]{
   display: none;
 }
@@ -81,7 +92,7 @@ input[type=range]::-webkit-slider-runnable-track {
   height: 8.4px;
   cursor: pointer;
   background: #000000cb;
-  border-radius: 1.3px;
+
   border: 0.2px solid #1d0101;
 }
 input[type=range]::-webkit-slider-thumb {
@@ -115,6 +126,11 @@ button {
   text-align: center;
   display: inline-block;
   border-radius: 2px;
+  font-family: Pirulen, 'Times New Roman', Times, serif; 
+}
+
+button:hover{
+  color: #d11a1a;
 }
 
 p.noteSymbol {
@@ -160,8 +176,25 @@ select {
   padding-left: 10px;
   display: inline-block;
   border-radius: 2px;
+  font-family: Pirulen, 'Times New Roman', Times, serif; 
 }
 
 .notePicker {
   margin: 10px;
+}
+
+.optionContainer {
+  background: #0000007e;
+  color: aliceblue;
+  border: none;
+  padding: 8px 2px;
+  margin: 2px;
+  text-align: center;
+  display: inline-block;
+  border-radius: 2px;
+  font-family: Pirulen, 'Times New Roman', Times, serif; 
+}
+
+.optionContainer input[type="range"]{
+  width: 50%;
 }

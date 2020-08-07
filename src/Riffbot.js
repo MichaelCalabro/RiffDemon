@@ -73,19 +73,19 @@ class RiffBot extends React.Component {
           <NotePicker synth={this.state.synth} selectNote={this.selectNote} deselectNote={this.deselectNote}></NotePicker>
           {chordPicker}
     
-          <label className="fret">
+          <label className="mainCheckBox">
             <input type="checkbox" onChange={this.toggleChords.bind(this)}/>
             <span>Chord Mode</span>
           </label>
 
-          <button onClick={() => this.deselectAllNotes()}>DESELECT ALL</button>
+          <button onClick={() => this.deselectAllNotes()}>CLEAR ALL</button>
 
           <select name="bars" id="barSelect">
             <optgroup label="Bars">
               <option value="1">1</option>
               <option value="2">2</option>
               <option value="3">3</option>
-              <option value="4">4</option>
+              <option value="4" selected="selected">4</option>
               <option value="5">5</option>
               <option value="6">6</option>
               <option value="7">7</option>
@@ -94,9 +94,14 @@ class RiffBot extends React.Component {
           </select>
   
           
-          <button onClick={() => this.makeRiff()}>Make Riff</button>
+          <button onClick={() => this.makeRiff()}>Generate Riff</button>
           <button onClick={() => this.startRiff()}><i className="fa fa-play"></i></button>
           <button onClick={() => this.stopRiff()}><i className="fa fa-stop"></i></button>
+          <div className="optionContainer">
+            <span>BPM</span>
+            <input type="range" min="0" max="250" defaultValue={120} step="1" onInput={this.setBPM.bind(this)} ></input>
+            <span id="bpmSliderValue">120</span>
+          </div>
 
           <TabDisplay notes={this.state.riffNotes}></TabDisplay>
 
@@ -187,6 +192,12 @@ class RiffBot extends React.Component {
         chordSelectedNotes: []
       });
       
+    }
+
+    setBPM(e){
+      const bpm = e.target.value;
+      document.getElementById("bpmSliderValue").innerText = bpm;
+      Tone.Transport.bpm.value = bpm;
     }
 
     setNoteWeight(note, weight){
