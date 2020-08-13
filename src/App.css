@@ -129,6 +129,12 @@ button {
   font-family: Pirulen, 'Times New Roman', Times, serif; 
 }
 
+.subButton {
+  background: #ffffff1a;
+  padding: 0px 16px;
+  margin: 0px 4px;
+}
+
 button:hover{
   color: #d11a1a;
 }
@@ -198,3 +204,4 @@ select {
 .optionContainer input[type="range"]{
   width: 50%;
 }
+

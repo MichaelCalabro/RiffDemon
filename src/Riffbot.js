@@ -4,6 +4,7 @@ import NotePicker from './NotePicker';
 import WeightedSelect from './WeightedSelect';
 import * as GuitarNotes from './notes';
 import TabDisplay from './TabDisplay';
+import BpmInput from './BpmInput';
 
 class RiffBot extends React.Component {
     constructor(props){
@@ -22,23 +23,20 @@ class RiffBot extends React.Component {
         initRythmWeights[rythm] = 100 / GuitarNotes.noteRythms.length;
       });
   
-      var distortion = new Tone.Distortion(0.8);
+      var distortion = new Tone.Distortion(10);
+      var reverb = new Tone.Reverb(2);
 
       this.state = {
       
         synth: new Tone.PolySynth(Tone.Synth, {
-          oscillator : {
-            type : "pwm",
-            modulationFrequency : 0.1,
-          },
           envelope : {
             attack : 0.01,
-            decay : 10,
-            sustain : 0,
-            release : 0,
+            decay : 20,
+            sustain : 0.01,
+            release : 0.1,
             decayCurve : "exponential"
           }
-        }).chain(distortion, Tone.Master),
+        }).chain(distortion, Tone.Master).chain(reverb, Tone.Master),
 
         riffNotes: [],
 
@@ -80,12 +78,12 @@ class RiffBot extends React.Component {
 
           <button onClick={() => this.deselectAllNotes()}>CLEAR ALL</button>
 
-          <select name="bars" id="barSelect">
+          <select name="bars" id="barSelect" defaultValue="4">
             <optgroup label="Bars">
               <option value="1">1</option>
               <option value="2">2</option>
               <option value="3">3</option>
-              <option value="4" selected="selected">4</option>
+              <option value="4">4</option>
               <option value="5">5</option>
               <option value="6">6</option>
               <option value="7">7</option>
@@ -97,11 +95,7 @@ class RiffBot extends React.Component {
           <button onClick={() => this.makeRiff()}>Generate Riff</button>
           <button onClick={() => this.startRiff()}><i className="fa fa-play"></i></button>
           <button onClick={() => this.stopRiff()}><i className="fa fa-stop"></i></button>
-          <div className="optionContainer">
-            <span>BPM</span>
-            <input type="range" min="0" max="250" defaultValue={120} step="1" onInput={this.setBPM.bind(this)} ></input>
-            <span id="bpmSliderValue">120</span>
-          </div>
+          <BpmInput></BpmInput>
 
           <TabDisplay notes={this.state.riffNotes}></TabDisplay>
 
@@ -192,12 +186,6 @@ class RiffBot extends React.Component {
         chordSelectedNotes: []
       });
       
-    }
-
-    setBPM(e){
-      const bpm = e.target.value;
-      document.getElementById("bpmSliderValue").innerText = bpm;
-      Tone.Transport.bpm.value = bpm;
     }
 
     setNoteWeight(note, weight){

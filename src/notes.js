@@ -23,13 +23,13 @@ export const noteRythmSymbols = {
 };
 
 export const rythmToTabSpace = {
-    '1n' : '        ',
-    '2n' : '    ',
-    '4n' : '  ',
-    '8n' : ' ',
-    '8t' : ' ',
-    '16n' : '',
-    '16t' : ''
+    '1n' : '                ',
+    '2n' : '        ',
+    '4n' : '    ',
+    '8n' : '  ',
+    '8t' : '  ',
+    '16n' : ' ',
+    '16t' : ' '
 }
 
 export const notesPerBeat = {
