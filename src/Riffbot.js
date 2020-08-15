@@ -103,7 +103,7 @@ class RiffBot extends React.Component {
             setWeight={this.setRythmWeight} classRef="rythmSlider" symbolConverter={GuitarNotes.rythmCodeToSymbol}></WeightedSelect> 
 
           <WeightedSelect collection={this.state.selectedNotes} defaultWeights={initNoteWeights} 
-            setWeight={this.setNoteWeight} classRef="noteSlider" symbolConverter={GuitarNotes.tabToNoteDomNode}></WeightedSelect>
+            setWeight={this.setNoteWeight} classRef="noteSlider" symbolConverter={GuitarNotes.tabToNoteDomNode} deselectNote={this.deselectNote}></WeightedSelect>
 
         </div>
       )
@@ -129,6 +129,12 @@ class RiffBot extends React.Component {
         selectedNotes: newNotes,
         selectedNoteWeights: newWeights
       });
+
+      //Uncheck note
+      const noteCb = document.getElementById("pick_" + note);
+      if(noteCb){
+        noteCb.checked = false;
+      }
       
     }
 

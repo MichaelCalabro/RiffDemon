@@ -13,14 +13,22 @@ class WeightedSlider extends React.Component {
   }
 
   render(){
+
+    var deselect = null;
+    if(this.props.deselectNote){
+      deselect = <button className="altButton" onClick={() => this.props.deselectNote(this.state.identifier)}>X</button>
+    }
+
     return(
       <li>
+          
           <span>{this.props.symbolConverter(this.state.identifier)}</span>
           <input type="range" min="0" max="100" className={this.props.classRef} defaultValue={this.props.defaultWeight} step="0.01" onInput={this.handleSlide.bind(this)} ref={this.state.sliderRef}></input>
           <label className="lock">
             <input type="checkbox" className="lock" onChange={this.handleCheck.bind(this)}/>
             <i id ={"lockToggle-" + this.props.id} className="fa fa-unlock lock"></i>
           </label>
+          {deselect}
       </li>
     )
   }

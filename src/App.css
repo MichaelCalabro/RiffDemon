@@ -135,6 +135,12 @@ button {
   margin: 0px 4px;
 }
 
+.altButton {
+  background: #00000000;
+  padding: 2px;
+  margin: 8px;
+}
+
 button:hover{
   color: #d11a1a;
 }

@@ -74,7 +74,7 @@ class NotePicker extends React.Component {
       return(
         <td className="fret">
           <label className="fret">
-            <input type="checkbox" onChange={this.handleCheck.bind(this)}/>
+            <input type="checkbox" id={'pick_' + this.props.string + ':' + this.props.fret} onChange={this.handleCheck.bind(this)}/>
             <span>{GuitarNotes.noteCodeToSymbol(this.state.note)}</span>
           </label>
         </td>
