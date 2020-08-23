@@ -1,0 +1,24 @@
+{
+  "files": {
+    "main.css": "/RiffDemon/static/css/main.677c40d9.chunk.css",
+    "main.js": "/RiffDemon/static/js/main.db6d9a5a.chunk.js",
+    "main.js.map": "/RiffDemon/static/js/main.db6d9a5a.chunk.js.map",
+    "runtime-main.js": "/RiffDemon/static/js/runtime-main.5176b6bf.js",
+    "runtime-main.js.map": "/RiffDemon/static/js/runtime-main.5176b6bf.js.map",
+    "static/js/2.d4056a28.chunk.js": "/RiffDemon/static/js/2.d4056a28.chunk.js",
+    "static/js/2.d4056a28.chunk.js.map": "/RiffDemon/static/js/2.d4056a28.chunk.js.map",
+    "index.html": "/RiffDemon/index.html",
+    "precache-manifest.a2b0f7746d37b8dbf6d8768e84d4743d.js": "/RiffDemon/precache-manifest.a2b0f7746d37b8dbf6d8768e84d4743d.js",
+    "service-worker.js": "/RiffDemon/service-worker.js",
+    "static/css/main.677c40d9.chunk.css.map": "/RiffDemon/static/css/main.677c40d9.chunk.css.map",
+    "static/js/2.d4056a28.chunk.js.LICENSE.txt": "/RiffDemon/static/js/2.d4056a28.chunk.js.LICENSE.txt",
+    "static/media/logo.svg": "/RiffDemon/static/media/logo.5d5d9eef.svg",
+    "static/media/App.css": "/RiffDemon/static/media/pirulen rg.be1158d7.ttf"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.5176b6bf.js",
+    "static/js/2.d4056a28.chunk.js",
+    "static/css/main.677c40d9.chunk.css",
+    "static/js/main.db6d9a5a.chunk.js"
+  ]
+}
