@@ -77,6 +77,7 @@ class RiffBot extends React.Component {
           </label>
 
           <button onClick={() => this.deselectAllNotes()}>CLEAR ALL</button>
+          <button onClick={() => this.makeRiff()}>Generate Riff</button>
 
           <select name="bars" id="barSelect" defaultValue="4">
             <optgroup label="Bars">
@@ -91,8 +92,6 @@ class RiffBot extends React.Component {
             </optgroup>
           </select>
   
-          
-          <button onClick={() => this.makeRiff()}>Generate Riff</button>
           <button onClick={() => this.startRiff()}><i className="fa fa-play"></i></button>
           <button onClick={() => this.stopRiff()}><i className="fa fa-stop"></i></button>
           <BpmInput></BpmInput>
@@ -320,6 +319,7 @@ class RiffBot extends React.Component {
         //Create riff if > 0 notes are selected and weighted
         if(Object.keys(this.state.selectedNoteWeights).length != 0){
           notes = this.createRiff();
+          Tone.Transport.position = 0;
         }
       
         this.setState({

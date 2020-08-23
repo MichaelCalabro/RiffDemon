@@ -20,7 +20,7 @@ class BpmInput extends React.Component {
   }
 
   incrementBPM(n){
-    const bpm = parseInt(Tone.Transport.bpm.value + n);
+    const bpm = parseInt(Math.round(Tone.Transport.bpm.value) + n);
 
     if(bpm >= 0 && bpm <= 300){
         document.getElementById("bpmValueDisplay").innerText = bpm;
