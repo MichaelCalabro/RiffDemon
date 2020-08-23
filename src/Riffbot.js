@@ -60,7 +60,7 @@ class RiffBot extends React.Component {
       var chordPicker = this.state.chordMode ? 
         <div>
           <NotePicker synth={this.state.synth} selectNote={this.selectChordNote} deselectNote={this.deselectChordNote}></NotePicker>
-          <button onClick={() => this.addChord()}>ADD CHORD</button>
+          <button onClick={() => this.addChord()}>Add Chord</button>
         </div>
       :
         null;
@@ -73,10 +73,10 @@ class RiffBot extends React.Component {
     
           <label className="mainCheckBox">
             <input type="checkbox" onChange={this.toggleChords.bind(this)}/>
-            <span>Chord Mode</span>
+            <span>Chords</span>
           </label>
 
-          <button onClick={() => this.deselectAllNotes()}>CLEAR ALL</button>
+          <button onClick={() => this.deselectAllNotes()}>Clear All</button>
           <button onClick={() => this.makeRiff()}>Generate Riff</button>
 
           <select name="bars" id="barSelect" defaultValue="4">
@@ -194,25 +194,11 @@ class RiffBot extends React.Component {
     }
 
     setNoteWeight(note, weight){
-      // this.setState(prevState => ({
-      //   selectedNoteWeights:{
-      //     ...prevState.selectedNoteWeights,
-      //     [note]: weight,
-      //   }
-      // }));
-
       this.state.selectedNoteWeights[note] = weight;
     }
 
 
     setRythmWeight(rythm, weight){
-      // this.setState(prevState => ({
-      //   selectedRythmWeights:{
-      //     ...prevState.selectedRythmWeights,
-      //     [rythm]: weight,
-      //   }
-      // }));
-
       this.state.selectedRythmWeights[rythm] = weight;
     }
 
@@ -220,7 +206,10 @@ class RiffBot extends React.Component {
       if(e.target.checked){
         this.setState({chordMode: true });
       }else{
-        this.setState({chordMode: false});
+        this.setState({
+          chordMode: false,
+          chordSelectedNotes: []
+        });
       }
     }
   

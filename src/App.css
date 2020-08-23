@@ -1,7 +1,6 @@
 .App {
   text-align: center;
   color: aliceblue;
-  /* background: #ffffff11; */
   padding: 1em;
 }
 
@@ -20,7 +19,6 @@ header{
 }
 
 body{
-  /* background: url('Images/blackBackground.jpg') center fixed;  */
   background: #1a1a1a;
 }
 
@@ -86,6 +84,7 @@ label.mainCheckBox {
   font-size: small;
   position: relative;
   cursor: pointer;
+  border: 2px solid #ffffff77;
 }
 
 label.mainCheckBox [type=checkbox]{
