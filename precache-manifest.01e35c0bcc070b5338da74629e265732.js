@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "106b0d4605453f2023942df411bbea85",
+    "revision": "349137a4e9ab5bcc72502376d8b2c8ca",
     "url": "/RiffDemon/index.html"
   },
   {

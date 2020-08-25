@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/RiffDemon/precache-manifest.a2b0f7746d37b8dbf6d8768e84d4743d.js"
+  "/RiffDemon/precache-manifest.01e35c0bcc070b5338da74629e265732.js"
 );
 
 self.addEventListener('message', (event) => {
